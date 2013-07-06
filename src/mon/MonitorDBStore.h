@@ -298,6 +298,7 @@ class MonitorDBStore
       if (!tx.empty())
 	tx.encode(bl);
     }
+    virtual pair<string,string> get_next_key() = 0;
   };
   typedef std::tr1::shared_ptr<StoreIteratorImpl> Synchronizer;
 
@@ -342,6 +343,15 @@ class MonitorDBStore
       done = true;
     }
 
+    virtual pair<string,string> get_next_key() {
+      assert(iter->valid());
+      pair<string,string> r = iter->raw_key();
+      do {
+	iter->next();
+      } while (iter->valid() && sync_prefixes.count(iter->raw_key().first) == 0);
+      return r;
+    }
+
     virtual bool _is_valid() {
       return iter->valid();
     }
@@ -379,6 +389,12 @@ class MonitorDBStore
     virtual bool _is_valid() {
       return iter->valid();
     }
+
+    virtual pair<string,string> get_next_key() {
+      assert(0);
+      return make_pair(string(),string());
+    }
+
   };
 
   Synchronizer get_synchronizer(pair<string,string> &key,
