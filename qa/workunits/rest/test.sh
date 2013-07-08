@@ -4,7 +4,12 @@
 # calls
 
 
-set -e
+no_exit_on_error=0
+if [[ $1 == '--no-exit-on-error' ]]; then
+  no_exit_on_error=1
+fi
+
+[[ $no_exit_on_error -eq 0 ]] && set -e
 
 #OUT=/tmp/cephtest.output.$$
 #HDR=/tmp/cephtest.headers.$$
