@@ -100,6 +100,46 @@ expect auth/export 200 xml "Accept: application/xml"
 expect auth/add 400 plain
 expect auth/add.json 400 json
 expect auth/add.xml 400 xml
+
+expect auth/add?entity=client.foo 200 plain
+expect auth/add.json?entity=client.bar 200 json
+expect auth/add.xml?entity=client.baz 200 xml
+
+expect auth/get 400 plain
+expect auth/get.json 400 json
+expect auth/get.xml 400 json
+
+expect auth/get?entity=client.bar 200 plain
+expect auth/get.json?entity=client.baz 200 json
+expect auth/get.xml?entity=client.foo 200 xml
+
+out_file="/tmp/cephtest.out.baz"
+expect auth/get?entity=client.baz 200 plain "" "$out_file.plain"
+entity_name=`cat $out_file.plain | head -n 1 | sed -n 's/\[\(.*\)\]/\1/p'`
+entity_key=`cat $out_file.plain | head -n 2 | tail -n 1 | sed -n 's/.*= \(.*\)$/\1/p'`
+expect auth/get.json?entity=client.baz 200 json "" "$out_file.json"
+expect auth/get.xml?entity=client.baz 200 xml "" "$out_file.xml"
+json_entity=$(json_get "$out_file.json" 'entity')
+json_key=$(json_get "$out_file.json" 'key')
+xml_entity=$(xml_get "$out_file.xml" '//response/output/auth/auth_entities/entity/text()')
+xml_key=$(xml_get "$out_file.xml" '//response/output/auth/auth_entities/key/text()')
+
+[[ "$entity_name" != "$json_entity" || "$entity_name" != "$xml_entity" ]] && return 1
+[[ "$entity_key" != "$json_key" || "$entity_key" != "$xml_key" ]] && return 1
+
+expect auth/get-or-create-key 400 plain
+expect auth/get-or-create-key.json 400 json
+expect auth/get-or-create-key.xml 400 xml
+
+expect auth/get-or-create-key?entity=client.baz 200 plain "" "$out_file.plain"
+expect auth/get-or-create-key.json?entity=client.baz 200 json "" "$out_file.json"
+expect auth/get-or-create-key.xml?entity=client.baz 200 xml "" "$out_file.xml"
+json_key=$(json_get "$out_file.json" 'key')
+xml_key=$(xml_get "$out_file.xml" '//response/output/auth/key/text()')
+
+[[ "$entity_key" != "$json_key" || "$entity_key" != "$xml_key" ]] && return 1
+
+
 exit 0
 
 ceph auth add client.xx mon allow osd "allow *"
