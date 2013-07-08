@@ -66,7 +66,7 @@ expect()
 #
 
 set -x
-expect auth/export 200 json
+expect auth/export 200 plain
 expect auth/export.json 200 json
 expect auth/export.xml 200 xml
 expect auth/export 200 xml "Accept: application/xml"
