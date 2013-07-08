@@ -30,18 +30,21 @@ BASEURL=${BASEURL:-"http://localhost:5000/api/v0.1/"}
 
 expect()
 {
-	local url code contenttype
+	local url code contenttype expected_contenttype out_file
 	url=$(echo "${BASEURL}${1}")
 	code=$2
 	contenttype=$3
 	added_hdrs=$4
+        out_file=$OUT
+
+        [[ ! -z "$5" ]] && out_file=$5
 
         expected_contenttype="application/$contenttype"
         if [[ "$contenttype" == "plain" ]]; then
           expected_contenttype="text/plain"
         fi
 
-	curl -s -o $OUT -H "$4" --dump-header $HDR $url
+	curl -s -o $out_file -H "$4" --dump-header $HDR $url
 	if grep -q "^HTTP/1.[01] $code" < $HDR && 
 	   grep -q -i "^Content-Type: $expected_contentype" < $HDR; then
 		:
@@ -50,17 +53,18 @@ expect()
 		cat $HDR >&2
 		return 1
 	fi
-	
+
+        validate_cmd=""
 	if [ "$contenttype" == "json" ] ; then
 		validate_cmd="json_xs -t null"
 	elif [ "$contenttype" == "xml" ] ; then
 		validate_cmd="xmllint --noout -"
 	fi
 	if [ -n "$validate_cmd" ] ; then
-		eval $validate_cmd < $OUT
+		eval $validate_cmd < $out_file
 		if [ $? != 0 ] ; then
 			echo "Invalid $contenttype output: " >&2
-			cat $OUT >&2
+			cat $out_file >&2
 			return 1
 		fi
 	fi
