@@ -624,6 +624,12 @@ bool AuthMonitor::preprocess_command(MMonCommand *m)
 	     prefix == "auth print_key" ||
 	     prefix == "auth get-key") {
     EntityAuth auth;
+    if (entity_name.empty()) {
+      ss << "entity not specified";
+      r = -EINVAL;
+      goto done;
+    }
+
     if (!mon->key_server.get_auth(entity, auth)) {
       ss << "don't have " << entity;
       r = -ENOENT;
