@@ -181,6 +181,7 @@ OPTION(mon_sync_debug, OPT_BOOL, false) // enable sync-specific debug
 OPTION(mon_sync_debug_leader, OPT_INT, -1) // monitor to be used as the sync leader
 OPTION(mon_sync_debug_provider, OPT_INT, -1) // monitor to be used as the sync provider
 OPTION(mon_sync_debug_provider_fallback, OPT_INT, -1) // monitor to be used as fallback if sync provider fails
+OPTION(mon_osd_force_trim_to, OPT_INT, 0)   // force mon to trim maps to this point, regardless of min_last_epoch_clean (dangerous, use with care)
 
 // dump transactions
 OPTION(mon_debug_dump_transactions, OPT_BOOL, false)
