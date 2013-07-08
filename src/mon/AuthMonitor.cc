@@ -753,6 +753,11 @@ bool AuthMonitor::prepare_command(MMonCommand *m)
     //paxos->wait_for_commit(new Monitor::C_Command(mon, m, 0, rs, get_version()));
     return true;
   } else if (prefix == "auth add") {
+    if (entity_name.empty()) {
+      ss << "entity not specified";
+      err = -EINVAL;
+      goto done;
+    }
     KeyServerData::Incremental auth_inc;
     auth_inc.name = entity;
     bufferlist bl = m->get_data();
