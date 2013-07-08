@@ -18,6 +18,9 @@
 #include "include/types.h"
 #include "include/utime.h"
 
+#include "common/Formatter.h"
+#include "include/buffer.h"
+
 #include <string>
 
 class CephContext;
@@ -85,6 +88,9 @@ public:
     bufferlist::iterator p = bl.begin();
     decode(p);
   }
+
+  void encode_formatted(string label, Formatter *f, bufferlist &bl);
+  void encode_plaintext(bufferlist &bl);
 
   // --
   int create(CephContext *cct, int type);
