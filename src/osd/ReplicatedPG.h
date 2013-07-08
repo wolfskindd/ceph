@@ -577,7 +577,7 @@ protected:
   int send_pull_legacy(int priority, int peer,
 		const ObjectRecoveryInfo& recovery_info,
 		ObjectRecoveryProgress progress);
-  void submit_push_data(const ObjectRecoveryInfo &recovery_info,
+  void submit_push_data(ObjectRecoveryInfo &recovery_info,
 			bool first,
 			bool complete,
 			const interval_set<uint64_t> &intervals_included,
