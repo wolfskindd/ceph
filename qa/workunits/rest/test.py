@@ -51,8 +51,8 @@ def expect(url, method, respcode, contenttype='json', extra_hdrs=None):
     return r
 
 if __name__ == '__main__':
-    expect('auth/export', 'GET', 200)
-    expect('auth/export.json', 'GET', 200)
+    expect('auth/export', 'GET', 200, 'plain')
+    expect('auth/export.json', 'GET', 200, 'json')
     expect('auth/export.xml', 'GET', 200, 'xml')
     expect('auth/export.xml', 'GET', 200, 'xml', {'accept':'application/xml'})
 

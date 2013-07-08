@@ -17,10 +17,12 @@ if MYDIR.endswith('src') and \
     if 'LD_LIBRARY_PATH' in os.environ:
         if MYLIBPATH not in os.environ['LD_LIBRARY_PATH']:
             os.environ['LD_LIBRARY_PATH'] += ':' + MYLIBPATH
+            print 'A'
             print >> sys.stderr, DEVMODEMSG
             os.execvp('python', ['python'] + sys.argv)
     else:
         os.environ['LD_LIBRARY_PATH'] = MYLIBPATH
+        print 'B'
         print >> sys.stderr, DEVMODEMSG
         os.execvp('python', ['python'] + sys.argv)
     sys.path.insert(0, os.path.join(MYDIR, 'pybind'))
@@ -47,9 +49,10 @@ DEFAULT_BASEURL = '/api/v0.1'
 DEFAULT_ADDR = '0.0.0.0:5000'
 DEFAULT_LOG_LEVEL = 'warning'
 DEFAULT_CLIENTNAME = 'client.restapi'
-DEFAULT_LOG_FILE = '/var/log/ceph/' + DEFAULT_CLIENTNAME + '.log'
+#DEFAULT_LOG_FILE = '/var/log/ceph/' + DEFAULT_CLIENTNAME + '.log'
+DEFAULT_LOG_FILE = MYDIR + '/out/' + DEFAULT_CLIENTNAME + '.log'
 
-app = flask.Flask(APPNAME)
+app = flask.Flask(__name__)
 
 LOGLEVELS = {
     'critical':logging.CRITICAL,
@@ -147,7 +150,7 @@ def api_setup():
     conffile = glob.args.conf or ''
     if glob.args.name:
         glob.clientname = glob.args.name
-        glob.logfile = '/var/log/ceph' + glob.clientname + '.log'
+        glob.logfile = MYDIR + '/out/' + glob.clientname + '.log'
 
     glob.clientname = glob.args.name or DEFAULT_CLIENTNAME
     glob.cluster = rados.Rados(name='client.restapi', conffile=conffile)
@@ -167,7 +170,8 @@ def api_setup():
     port = int(port)
 
     loglevel = get_conf(cfg, 'log_level') or 'warning'
-    logfile = get_conf(cfg, 'log_file') or '/var/lib/ceph/ceph-rest-api.log'
+    logfile = get_conf(cfg, 'log_file') or MYDIR + '/out/ceph-rest-api.log'
+    print '--- log file: ' + logfile
     app.logger.addHandler(logging.handlers.WatchedFileHandler(logfile))
     app.logger.setLevel(LOGLEVELS[loglevel.lower()])
     for h in app.logger.handlers:
