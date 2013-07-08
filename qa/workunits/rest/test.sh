@@ -70,6 +70,23 @@ expect()
 	fi
 }
 
+xml_get()
+{
+  local in_file xpath
+  in_file=$1
+  xpath=$2
+
+  echo "`xmllint --xpath "$xpath" $1`"
+}
+
+json_get()
+{
+  local in_file k
+  in_file=$1
+  k=$2
+  echo `json_xs < $in_file | grep $k | sed -n 's/^.* : "\(.*\)".*/\1/p'`
+}
+
 #
 # Assumes there are at least 3 MDSes and two OSDs
 #
