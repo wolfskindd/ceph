@@ -30,12 +30,18 @@ expect()
 	code=$2
 	contenttype=$3
 	added_hdrs=$4
+
+        expected_contenttype="application/$contenttype"
+        if [[ "$contenttype" == "plain" ]]; then
+          expected_contenttype="text/plain"
+        fi
+
 	curl -s -o $OUT -H "$4" --dump-header $HDR $url
 	if grep -q "^HTTP/1.[01] $code" < $HDR && 
-	   grep -q -i "^Content-Type: application/$contentype" < $HDR; then
+	   grep -q -i "^Content-Type: $expected_contentype" < $HDR; then
 		:
 	else
-		echo "expected $code, application/$contenttype: headers:\n" >&2
+		echo "expected $code, $expeted_contenttype: headers:\n" >&2
 		cat $HDR >&2
 		return 1
 	fi
