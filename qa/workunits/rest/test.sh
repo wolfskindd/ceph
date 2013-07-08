@@ -41,7 +41,7 @@ expect()
 	   grep -q -i "^Content-Type: $expected_contentype" < $HDR; then
 		:
 	else
-		echo "expected $code, $expeted_contenttype: headers:\n" >&2
+		echo "expected $code, $expected_contenttype: headers:\n" >&2
 		cat $HDR >&2
 		return 1
 	fi
