@@ -373,9 +373,7 @@ void CryptoKey::decrypt(CephContext *cct, const bufferlist& in, bufferlist& out,
 
 void CryptoKey::print(std::ostream &out) const
 {
-  string a;
-  encode_base64(a);
-  out << a;
+  out << encode_base64();
 }
 
 void CryptoKey::to_str(std::string& s) const

@@ -72,6 +72,11 @@ public:
     e.append('\0');
     s = e.c_str();
   }
+  string encode_base64() const {
+    string s;
+    encode_base64(s);
+    return s;
+  }
   void decode_base64(const string& s) {
     bufferlist e;
     e.append(s);
