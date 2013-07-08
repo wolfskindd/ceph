@@ -98,8 +98,8 @@ expect auth/export.xml 200 xml
 expect auth/export 200 xml "Accept: application/xml"
 
 expect auth/add 400 plain
-expect auth/add 400 json
-expect auth/add 400 xml
+expect auth/add.json 400 json
+expect auth/add.xml 400 xml
 exit 0
 
 ceph auth add client.xx mon allow osd "allow *"
