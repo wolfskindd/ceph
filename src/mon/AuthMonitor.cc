@@ -636,7 +636,7 @@ bool AuthMonitor::preprocess_command(MMonCommand *m)
       goto done;
     }
     if (f) {
-      auth.key.encode_formatted("auth_dump", f.get(), rdata);
+      auth.key.encode_formatted("auth", f.get(), rdata);
     } else {
       auth.key.encode_plaintext(rdata);
     }
