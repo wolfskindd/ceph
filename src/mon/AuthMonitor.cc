@@ -643,7 +643,7 @@ bool AuthMonitor::preprocess_command(MMonCommand *m)
     r = 0;
   } else if (prefix == "auth list") {
     if (f) {
-      mon->key_server.encode_formatted("auth_dump", f.get(), rdata);
+      mon->key_server.encode_formatted("auth", f.get(), rdata);
       f->flush(rdata);
     } else {
       mon->key_server.encode_plaintext(rdata);
