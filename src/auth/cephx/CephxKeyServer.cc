@@ -299,7 +299,8 @@ int KeyServer::encode_secrets(Formatter *f, stringstream *ds) const
 {
   Mutex::Locker l(lock);
 
-  f->open_array_section("auth_dump");
+  if (f)
+    f->open_array_section("auth_dump");
 
   map<EntityName, EntityAuth>::const_iterator mapiter = data.secrets_begin();
 
@@ -308,9 +309,10 @@ int KeyServer::encode_secrets(Formatter *f, stringstream *ds) const
 
   while (mapiter != data.secrets_end()) {
     const EntityName& name = mapiter->first;
-    if (ds)
+    if (ds) {
       *ds << name.to_str() << std::endl;
       *ds << "\tkey: " << mapiter->second.key << std::endl;
+    }
     if (f) {
       f->open_object_section("auth_entities");
       f->dump_string("entity", name.to_str());
