@@ -532,6 +532,11 @@ private:
   bool trimming;
 
   /**
+   * Flag to indicate we should bootstrap after the current round completes
+   */
+  bool need_bootstrap;
+
+  /**
    * @defgroup Paxos_h_callbacks Callback classes.
    * @{
    */
@@ -1007,7 +1012,8 @@ public:
 		   lease_timeout_event(0),
 		   accept_timeout_event(0),
 		   clock_drift_warned(0),
-		   trimming(false) { }
+		   trimming(false),
+		   need_bootstrap(false) { }
 
   const string get_name() const {
     return paxos_name;

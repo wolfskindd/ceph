@@ -697,6 +697,8 @@ void Paxos::commit()
   new_value.clear();
 
   remove_legacy_versions();
+
+  mon->refresh_from_paxos(&need_bootstrap);
 }
 
 
@@ -786,7 +788,6 @@ void Paxos::finish_proposal()
   assert(mon->is_leader());
 
   // make sure we have the latest state loaded up
-  bool need_bootstrap = false;
   mon->refresh_from_paxos(&need_bootstrap);
 
   // ok, now go active!
@@ -815,6 +816,7 @@ void Paxos::finish_proposal()
 
   if (need_bootstrap) {
     dout(10) << " doing requested bootstrap" << dendl;
+    need_bootstrap = false;
     mon->bootstrap();
     return;
   }
@@ -1062,6 +1064,8 @@ void Paxos::leader_init()
     return;
   }
 
+  need_bootstrap = false;
+
   state = STATE_RECOVERING;
   lease_expire = utime_t();
   dout(10) << "leader_init -- starting paxos recovery" << dendl;
@@ -1072,6 +1076,8 @@ void Paxos::peon_init()
 {
   cancel_events();
   new_value.clear();
+
+  need_bootstrap = false;
 
   state = STATE_RECOVERING;
   lease_expire = utime_t();
