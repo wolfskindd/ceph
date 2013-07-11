@@ -137,7 +137,7 @@ COMMAND("auth get-key name=entity,type=CephString", "display requested key")
 COMMAND("auth print-key name=entity,type=CephString", "display requested key")
 COMMAND("auth print_key name=entity,type=CephString", "display requested key")
 COMMAND("auth list", "list authentication state")
-COMMAND("auth import", "auth import: read keyring file from input")
+COMMAND("auth import", "auth import: read keyring file from -i <file>")
 COMMAND("auth add " \
 	"name=entity,type=CephString " \
 	"name=caps,type=CephString,n=N,req=false", \
